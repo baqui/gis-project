@@ -49,6 +49,10 @@ const standardModuleLoaders = {
         name: '[name]-[hash].[ext]',
         emitFile: true
       }
+    },
+    {
+      test: /\.json$/,
+      loader: 'json-loader'
     }
   ]
 };
