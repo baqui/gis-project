@@ -1,1 +1,5 @@
-// global actions
+const WEATHER_DATA_FETCHED = 'WEATHER_DATA_FETCHED';
+
+export default {
+  WEATHER_DATA_FETCHED
+}

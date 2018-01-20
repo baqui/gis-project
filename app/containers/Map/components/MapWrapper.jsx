@@ -2,14 +2,16 @@ import React, { PureComponent } from "react";
 import { connect } from 'react-redux';
 import { GoogleMap, withGoogleMap } from 'react-google-maps';
 
+import * as REGIONS from '../../../services/wojewodztwa.json';
 import { MAP_STYLES, MAP_DEFAULT_COORDINATES, MAP_DEFAULT_ZOOM } from '../../../utils/consts';
-import { mapLoaded } from '../duck/actions';
-import Polygon from './Polygon';
+import { mapLoaded, parseVoivodeshipsData } from '../duck/actions';
+import Polygons from './Polygons';
 
 const mapStateToProps = () => ({})
 
 const mapDispatchToProps = (dispatch) => ({
   mapAttached: (map) => dispatch( mapLoaded(map) ),
+  parseVoivodeshipsData: (data) => dispatch( parseVoivodeshipsData(data) )
 })
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -18,6 +20,10 @@ export default class MapWrapper extends PureComponent {
 
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount(){
+    this.props.parseVoivodeshipsData( REGIONS );
   }
 
   render(){
@@ -33,7 +39,7 @@ export default class MapWrapper extends PureComponent {
           streetViewControl: false
         }}
       >
-        <Polygon />
+        <Polygons />
       </GoogleMap>
     );
   }

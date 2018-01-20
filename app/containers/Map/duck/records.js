@@ -1,0 +1,19 @@
+import { Record, List } from 'immutable';
+
+export const Point = new Record({
+  lng: 0.0,
+  lat: 0.0
+})
+
+export const City = new Record({
+  name: '',
+  coordinates: new Point()
+})
+
+export const Voivodeship = new Record({
+  cartodb_id: null,
+  name: '',
+  city: new City(),
+  coordinates: List([]), // coordinates from parsed geojson
+  neighbors: List([]), // list of catodb_ids,
+})
