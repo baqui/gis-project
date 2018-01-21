@@ -26,6 +26,6 @@ class Map extends PureComponent {
 }
 export default styled( Map )`
   box-sizing: border-box;
-  width: 50%;
+  width: 100%;
   height: calc(100vh - 90px);
 `

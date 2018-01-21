@@ -1,6 +1,6 @@
 import types from './types';
 import { List } from 'immutable';
-import { normalizedVoivodeshipData } from './normalizers';
+import { normalizedVoivodeshipData, normalizedForecastData } from './normalizers';
 import WeatherApiClient from '../../../services/WeatherApiClient';
 
 let googleMap;
@@ -41,7 +41,6 @@ const addAdditionalPointsAround = (point) => {
 }
 
 
-
 export const parseVoivodeshipsData = (data) => {
   return (dispatch) => {
     const voivodeships_data = normalizedVoivodeshipData(data);
@@ -49,10 +48,8 @@ export const parseVoivodeshipsData = (data) => {
     const voivodesCitiesAndIds = voivodeships_data.toArray()
         .filter( voivode => voivode )
         .map( voivode => ({ name: voivode.city.name, cartodb_id: voivode.cartodb_id }));
-    //TODO dispatch fetchVoivodeshipsWeather to fetch data for all voivodeships
-    //dispatch( fetchVoivodeshipsWeather( 'Kielce', 1) );
-    //dispatch( fetchVoivodeshipsWeather( 'Gdańsk', 8) );
-    const voivodesCitiesAndIdsTEST = [{ name: 'Olsztyn', cartodb_id: 4 }, { name: 'Olsztyn', cartodb_id: 9 }];
+    //TODO change test to full array.
+    const voivodesCitiesAndIdsTEST = [{ name: 'Olsztyn', cartodb_id: 15 }, { name: 'Gdańsk', cartodb_id: 12 }];
     const promises = voivodesCitiesAndIdsTEST.map( ( voivode ) => ( WeatherApiClient.getWeatherByRegionName( voivode.name ) ));
 
     Promise.all(promises).then( (response) => {
@@ -71,18 +68,7 @@ const voivodeshipsDataParsed = (data) => ({
   data
 });
 
-// const fetchVoivodeshipsWeather = ( name, cartodb_id ) => {
-//   return (dispatch) => {
-//     WeatherApiClient.getWeatherByRegionName(name).then(
-//       (response) => {
-//         console.log("WEATHERAPICLIENT", response.data );
-//         dispatch( weatherDataFethed( response.data, cartodb_id ) );
-//       }
-//     )
-//   }
-// }
-
 const weatherDataFethed = ( data ) => ({
   type: types.WEATHER_DATA_FETCHED,
-  data
+  data: normalizedForecastData(data)
 })

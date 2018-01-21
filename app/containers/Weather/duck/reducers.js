@@ -8,8 +8,7 @@ const weather = ( state = Map ({
   list: List([])
 }), action ) => {
   switch (action.type) {
-    case types.WEATHER_DATA_FETCHED:
-      return state.set('list', normalizedForecastData( action.data ) )
+    
   }
   return state;
 }
