@@ -5,6 +5,25 @@ export const getVoivodeshipsWeather = (state) => state.voivodeships.voivodeships
 
 export const isVoivodeshipsWeatherDataFetched = (state) => state.voivodeships.voivodeships.get('weather_data_fetched');
 
+export const getCheckedVoivodeshipId = (state) => state.voivodeships.voivodeships.get('checked_voivodeship');
+
+export const getCheckedVoivodeshipNeighbours = (state) => {
+  const cartodb_id = getCheckedVoivodeshipId(state);
+  if( cartodb_id ){
+    const voivodeships = getVoivodeships(state);
+    return voivodeships[ cartodb_id ].neighbours.toArray();
+  }
+  return [];
+}
+
+export const getChosenVoivodeshipCoordinates = (state) => {
+  const voivodeships = getVoivodeships(state);
+  const cartodb_id = getCheckedVoivodeshipId(state);
+  if( cartodb_id && voivodeships[ cartodb_id ]) { return voivodeships[ cartodb_id ].coordinates }
+
+  return [];
+}
+
 export const getTempRange = (state) => {
   let temps = state.voivodeships.voivodeships.get('weather').toArray().filter( a => a ).map( weather => weather.temp );
   temps = removeDuplicates( temps );
@@ -13,7 +32,7 @@ export const getTempRange = (state) => {
 
 
 const removeDuplicates = ( a ) => (
-  a.sort().filter(function(item, index, array) {
+  a.sort().reverse().filter(function(item, index, array) {
        return !index || item != array[index - 1];
    })
 )

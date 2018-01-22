@@ -6,6 +6,7 @@ import * as REGIONS from '../../../services/wojewodztwa.json';
 import { MAP_STYLES, MAP_DEFAULT_COORDINATES, MAP_DEFAULT_ZOOM } from '../../../utils/consts';
 import { mapLoaded, parseVoivodeshipsData } from '../duck/actions';
 import Polygons from './Polygons';
+import Temperatures from './Temperatures';
 
 const mapStateToProps = () => ({})
 
@@ -39,6 +40,7 @@ export default class MapWrapper extends PureComponent {
           streetViewControl: false
         }}
       >
+        <Temperatures />
         <Polygons />
       </GoogleMap>
     );

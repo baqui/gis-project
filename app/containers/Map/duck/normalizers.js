@@ -33,6 +33,7 @@ const toVoivodeship = obj => (
     name: obj.properties.name,
     city: toCity(obj.city),
     coordinates: List( obj.geometry.coordinates.map( reg => reg[0] ) ),
+    neighbours: List( obj.properties.neighbours )
   })
 )
 

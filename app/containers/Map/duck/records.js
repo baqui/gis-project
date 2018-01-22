@@ -15,7 +15,7 @@ export const Voivodeship = new Record({
   name: '',
   city: new City(),
   coordinates: List([]), // coordinates from parsed geojson
-  neighbors: List([]), // list of catodb_ids,
+  neighbours: List([]), // list of catodb_ids,
 })
 
 export const DayForecast = new Record({

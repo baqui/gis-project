@@ -3,7 +3,7 @@ export const  WIZARD_MAP_SHAPE_SETTINGS = {
   fillOpacity: 1,
   strokeWeight: 2,
   strokeColor: '#1c205c',
-  clickable: false,
-  editable: true,
+  clickable: true,
+  editable: false,
   zIndex: 1,
 }
