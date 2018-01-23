@@ -47,13 +47,13 @@ export const parseVoivodeshipsData = (data) => {
         .filter( voivode => voivode )
         .map( voivode => ({ name: voivode.city.name, cartodb_id: voivode.cartodb_id }));
     //TODO change test to full array.
-    //const voivodesCitiesAndIdsTEST = [{ name: 'Olsztyn', cartodb_id: 15 }, { name: 'Gdańsk', cartodb_id: 12 }];
-    const promises = voivodesCitiesAndIds.map( ( voivode ) => ( WeatherApiClient.getWeatherByRegionName( voivode.name ) ));
+    const voivodesCitiesAndIdsTEST = [{ name: 'Olsztyn', cartodb_id: 15 }, { name: 'Gdańsk', cartodb_id: 12 }];
+    const promises = voivodesCitiesAndIdsTEST.map( ( voivode ) => ( WeatherApiClient.getWeatherByRegionName( voivode.name ) ));
     //const promises = [].map( ( voivode ) => ( WeatherApiClient.getWeatherByRegionName( voivode.name ) ));
 
     Promise.all(promises).then( (response) => {
       const voivodes_weather = response.map( (weather, index) => ({
-        cartodb_id: voivodesCitiesAndIds[index].cartodb_id,
+        cartodb_id: voivodesCitiesAndIdsTEST[index].cartodb_id,
         data: weather.data
       }));
       dispatch( weatherDataFethed( voivodes_weather ) );

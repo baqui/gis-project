@@ -2,17 +2,22 @@ import React, { PureComponent } from 'react';
 import { Polygon } from "react-google-maps";
 import { connect } from 'react-redux';
 import { WIZARD_MAP_SHAPE_SETTINGS } from '../duck/consts';
+import { MAP_MODES } from '../../../utils/consts';
 import { setChosenVoivodeship, fitMapToChosenVoivodeship } from '../duck/actions';
-import { getVoivodeships, getTempRange, isVoivodeshipsWeatherDataFetched,
+import { getVoivodeships, getWeatherRange, isVoivodeshipsWeatherDataFetched, getCurrentMode,
          getVoivodeshipsWeather, getCheckedVoivodeshipId, getCheckedVoivodeshipNeighbours } from '../duck/selectors';
 
 const mapStateToProps = (state) => ({
   voivodeships: getVoivodeships(state),
   voivodeships_weather: getVoivodeshipsWeather(state),
-  tempRange: getTempRange(state),
+  temp: getWeatherRange(state, 'temp'),
+  visibility: getWeatherRange(state, 'visibility'),
+  pressure: getWeatherRange(state, 'pressure'),
+  wind_speed: getWeatherRange(state, 'wind_speed'),
   isWeatherDataFetched: isVoivodeshipsWeatherDataFetched(state),
   checked_voivodeship: getCheckedVoivodeshipId(state),
-  voivodeshipNeighbours: getCheckedVoivodeshipNeighbours(state)
+  voivodeshipNeighbours: getCheckedVoivodeshipNeighbours(state),
+  mode: getCurrentMode(state)
 })
 
 const mapDispatchToProps = (dispatch) => ({
@@ -53,10 +58,10 @@ export default class Polygons extends PureComponent {
     this.props.setChosenVoivodeship( cartodb_id );
   }
 
-  mapTemp2Transparency( temp ){
-    if( !this.props.tempRange ){ return 0; }
-    const temp_ratio = 1 / ( this.props.tempRange.length + 1 );
-    return ( this.props.tempRange.indexOf( temp ) + 1 ) * temp_ratio;
+  mapTemp2Transparency( mode ){
+    if( !this.props[this.props.mode] ){ return 0; }
+    const ratio = 1 / ( this.props[this.props.mode].length + 1 );
+    return ( this.props[this.props.mode].indexOf( mode ) + 1 ) * ratio;
   }
 
   polygonFillColor(id) {
@@ -65,8 +70,8 @@ export default class Polygons extends PureComponent {
     } else if( this.props.voivodeshipNeighbours.indexOf(id) > -1 ) {
       return 'rgba(145, 96, 210, .4)';
     } else if( !this.props.checked_voivodeship && this.props.isWeatherDataFetched && this.props.voivodeships_weather[id] ) {
-      const temp = this.props.voivodeships_weather[id].temp;
-      return `rgba(55, 106, 199, ${ this.mapTemp2Transparency(temp) })`;
+      const mode = this.props.voivodeships_weather[id][this.props.mode];
+      return `rgba(55, 106, 199, ${ this.mapTemp2Transparency(mode) })`;
     } else {
       return 'rgba(55, 106, 199, 0)';
     }

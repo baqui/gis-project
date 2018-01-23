@@ -7,7 +7,9 @@ export const getWeatherForChosenVoivodeship = (state) => {
   if( cartodb_id ){
     const voivodeships = getVoivodeshipsWeather(state);
     const weather = voivodeships[ cartodb_id ];
-    return weather ? weather.forecast.toArray() : []; 
+    return weather ? weather.forecast.toArray() : [];
   }
   return [];
 }
+
+export const displayWeatherPanel = (state) => getWeatherForChosenVoivodeship(state).length > 0;

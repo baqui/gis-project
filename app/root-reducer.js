@@ -1,9 +1,8 @@
 import { combineReducers } from 'redux';
 
 import voivodeships from './containers/Map/duck/reducers';
-import weather from './containers/Weather/duck/reducers';
-
+import modes from './containers/Controls/duck/reducers';
 export default combineReducers({
   voivodeships,
-  weather
+  modes
 });

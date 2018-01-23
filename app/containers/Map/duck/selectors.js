@@ -7,6 +7,8 @@ export const isVoivodeshipsWeatherDataFetched = (state) => state.voivodeships.vo
 
 export const getCheckedVoivodeshipId = (state) => state.voivodeships.voivodeships.get('checked_voivodeship');
 
+export const getCurrentMode = (state) => state.modes.modes.get('currentMode');
+
 export const getCheckedVoivodeshipNeighbours = (state) => {
   const cartodb_id = getCheckedVoivodeshipId(state);
   if( cartodb_id ){
@@ -24,8 +26,8 @@ export const getChosenVoivodeshipCoordinates = (state) => {
   return [];
 }
 
-export const getTempRange = (state) => {
-  let temps = state.voivodeships.voivodeships.get('weather').toArray().filter( a => a ).map( weather => weather.temp );
+export const getWeatherRange = (state, type) => {
+  let temps = state.voivodeships.voivodeships.get('weather').toArray().filter( a => a ).map( weather => weather[type] );
   temps = removeDuplicates( temps );
   return temps.length ? temps : null;
 }

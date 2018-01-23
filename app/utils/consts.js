@@ -27,8 +27,15 @@ export const MAP_STYLES = [
 ]
 
 export const MAP_DEFAULT_COORDINATES = {
-  lat: 54.358367,
-  lng: 18.6462931
+  lat: 52.143470,
+  lng: 19.545416
 }
 
 export const MAP_DEFAULT_ZOOM = 6;
+
+export const MAP_MODES = {
+  temperature: 'temp',
+  visibility: 'visibility',
+  pressure: 'pressure',
+  wind: 'wind_speed'
+}

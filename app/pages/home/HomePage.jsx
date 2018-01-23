@@ -1,10 +1,31 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import styled from 'styled-components';
+import { connect } from 'react-redux';
 
-import { TextBanner } from '../../components/TextBanner/TextBanner';
+import { displayWeatherPanel } from './duck/selectors';
 import Map from '../../containers/Map/Map';
+import Weather from '../../containers/Weather/Weather';
+import Controls from '../../containers/Controls/Controls';
 
-export const HomePage = () => (
-  <div>
-    <Map />
-  </div>
-);
+const mapStateToProps = (state) => ({
+  displayWeatherPanel: displayWeatherPanel(state)
+})
+
+const mapDispatchToProps = (dispatch) => ({})
+
+@connect( mapStateToProps, mapDispatchToProps )
+export default class HomePage extends PureComponent {
+  constructor(props){
+    super(props);
+  }
+
+  render(){
+    return (
+      <div className={ this.props.className }>
+        <Map fullWidth={ this.props.displayWeatherPanel } />
+        <Weather fullWidth={ this.props.displayWeatherPanel } />
+        <Controls />
+      </div>
+    )
+  }
+}

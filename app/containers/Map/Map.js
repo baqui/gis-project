@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import MapWrapper from './components/MapWrapper';
+import { grid } from '../../styles/grid';
 
 const Container = <div style={{height: '100%', width: '100%'}} />;
 
@@ -26,6 +27,9 @@ class Map extends PureComponent {
 }
 export default styled( Map )`
   box-sizing: border-box;
-  width: 100%;
   height: calc(100vh - 90px);
+  ${ props => console.log(props)}
+  ${ grid.breakpoints({ df: 11}, 12, '0px') };
+  ${ props => props.fullWidth ? grid.breakpoints({ df: 11}, 12, '0px') : grid.breakpoints({ df: 12}, 12, '0px')  };
+
 `
