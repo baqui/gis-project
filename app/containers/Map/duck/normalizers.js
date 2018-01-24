@@ -1,6 +1,6 @@
 import { schema, normalize } from 'normalizr';
 import { List } from 'immutable';
-import { Point, City, Voivodeship, DayForecast, VoivodeWeather } from './records';
+import { Point, City, Voivodeship, DayForecast, VoivodeWeather, VoivodeWiki } from './records';
 
 export const normalizedVoivodeshipData = (data) => {
   let voivodeships = [];
@@ -14,6 +14,14 @@ export const normalizedForecastData = (data) => {
   let voivodeships = [];
   data.map( feature => {
     voivodeships[ feature.cartodb_id ] = toVoivodeWeather( feature );
+  });
+  return List( voivodeships );
+}
+
+export const normalizedVoivodesWikiData = (data) => {
+  let voivodeships = [];
+  data.map( voivode => {
+    voivodeships[ voivode.cartodb_id ] = toVoivodeWiki( voivode.data );
   });
   return List( voivodeships );
 }
@@ -58,3 +66,5 @@ const toVoivodeWeather = (obj) => {
     })
   )
 }
+
+const toVoivodeWiki = (obj) => ( new VoivodeWiki(obj) )

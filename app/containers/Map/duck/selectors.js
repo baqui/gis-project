@@ -33,8 +33,6 @@ export const getWeatherRange = (state, type) => {
 }
 
 
-const removeDuplicates = ( a ) => (
-  a.sort().reverse().filter(function(item, index, array) {
-       return !index || item != array[index - 1];
-   })
-)
+const removeDuplicates = ( a ) => a.sort( (a, b) => ( a - b )).reverse().filter(function(item, index, array) {
+   return !index || item != array[index - 1];
+})

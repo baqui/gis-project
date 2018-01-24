@@ -3,6 +3,7 @@ import { Polygon } from "react-google-maps";
 import { connect } from 'react-redux';
 import { WIZARD_MAP_SHAPE_SETTINGS } from '../duck/consts';
 import { MAP_MODES } from '../../../utils/consts';
+import { POLYGON_COLORS } from '../duck/consts';
 import { setChosenVoivodeship, fitMapToChosenVoivodeship } from '../duck/actions';
 import { getVoivodeships, getWeatherRange, isVoivodeshipsWeatherDataFetched, getCurrentMode,
          getVoivodeshipsWeather, getCheckedVoivodeshipId, getCheckedVoivodeshipNeighbours } from '../duck/selectors';
@@ -71,7 +72,7 @@ export default class Polygons extends PureComponent {
       return 'rgba(145, 96, 210, .4)';
     } else if( !this.props.checked_voivodeship && this.props.isWeatherDataFetched && this.props.voivodeships_weather[id] ) {
       const mode = this.props.voivodeships_weather[id][this.props.mode];
-      return `rgba(55, 106, 199, ${ this.mapTemp2Transparency(mode) })`;
+      return `rgba(${ POLYGON_COLORS[ this.props.mode ] }, ${ this.mapTemp2Transparency(mode) })`;
     } else {
       return 'rgba(55, 106, 199, 0)';
     }

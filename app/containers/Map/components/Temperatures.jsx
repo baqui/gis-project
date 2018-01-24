@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 import InfoBox from "react-google-maps/lib/components/addons/InfoBox";
 import { connect } from 'react-redux';
-import { getVoivodeships, getTempRange, isVoivodeshipsWeatherDataFetched,
+import { getVoivodeships, getTempRange, isVoivodeshipsWeatherDataFetched, getCurrentMode,
          getVoivodeshipsWeather, getCheckedVoivodeshipId, getCheckedVoivodeshipNeighbours } from '../duck/selectors';
 
 const mapStateToProps = (state) => ({
@@ -10,7 +10,8 @@ const mapStateToProps = (state) => ({
   voivodeships_weather: getVoivodeshipsWeather(state),
   isWeatherDataFetched: isVoivodeshipsWeatherDataFetched(state),
   checked_voivodeship: getCheckedVoivodeshipId(state),
-  voivodeshipNeighbours: getCheckedVoivodeshipNeighbours(state)
+  voivodeshipNeighbours: getCheckedVoivodeshipNeighbours(state),
+  mode: getCurrentMode(state)
 })
 
 const mapDispatchToProps = (dispatch) => ({})
@@ -39,12 +40,26 @@ export default class Temperatures extends PureComponent {
         >
           <StyledLabel>
             <span>
-              { this.farenheitToCelcius( weather.temp ) }
+              { this.showWeatherDescription( weather ) }
             </span>
           </StyledLabel>
         </InfoBox>
       )
     })
+  }
+
+  showWeatherDescription( weather ){
+    const mode = this.props.mode;
+    switch(mode){
+      case 'temp':
+        return `${this.farenheitToCelcius( weather.temp )}`
+      case 'visibility':
+        return `${ weather.visibility }`
+      case 'pressure':
+        return `${ weather.pressure }`
+      case 'wind_speed':
+        return `${ weather.wind_speed }`
+    }
   }
 
   farenheitToCelcius(temp){
@@ -60,8 +75,8 @@ export default class Temperatures extends PureComponent {
 }
 
 const StyledLabel = styled.div`
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   font-size: 15px;
   font-weight: 600;
   background-color: white;

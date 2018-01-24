@@ -32,3 +32,18 @@ export const VoivodeWeather = new Record({
   wind_speed: null,
   forecast: List([])
 })
+
+export const VoivodeWiki = new Record({
+  name: '',
+  capital: '',
+  voivode: '',
+  voivode_place: '',
+  regional_council_place: '',
+  marshal: '',
+  area: '',
+  population: '',
+  density: '',
+  urbanization: '',
+  registration_plate: '',
+  short_description: ''
+})

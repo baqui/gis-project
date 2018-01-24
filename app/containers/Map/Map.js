@@ -28,7 +28,6 @@ class Map extends PureComponent {
 export default styled( Map )`
   box-sizing: border-box;
   height: calc(100vh - 90px);
-  ${ props => console.log(props)}
   ${ grid.breakpoints({ df: 11}, 12, '0px') };
   ${ props => props.fullWidth ? grid.breakpoints({ df: 11}, 12, '0px') : grid.breakpoints({ df: 12}, 12, '0px')  };
 

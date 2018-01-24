@@ -6,6 +6,7 @@ import { displayWeatherPanel } from './duck/selectors';
 import Map from '../../containers/Map/Map';
 import Weather from '../../containers/Weather/Weather';
 import Controls from '../../containers/Controls/Controls';
+import Wiki from '../../containers/Wiki/Wiki';
 
 const mapStateToProps = (state) => ({
   displayWeatherPanel: displayWeatherPanel(state)
@@ -25,6 +26,7 @@ export default class HomePage extends PureComponent {
         <Map fullWidth={ this.props.displayWeatherPanel } />
         <Weather fullWidth={ this.props.displayWeatherPanel } />
         <Controls />
+        <Wiki />
       </div>
     )
   }
