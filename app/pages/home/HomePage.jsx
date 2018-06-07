@@ -1,33 +1,37 @@
 import React, { PureComponent } from 'react';
-import styled from 'styled-components';
-import { connect } from 'react-redux';
 
-import { displayWeatherPanel } from './duck/selectors';
+import Controls from '../../containers/Controls/Controls';
 import Map from '../../containers/Map/Map';
 import Weather from '../../containers/Weather/Weather';
-import Controls from '../../containers/Controls/Controls';
 import Wiki from '../../containers/Wiki/Wiki';
+import { connect } from 'react-redux';
+import { displayWeatherPanel } from './duck/selectors';
+import styled from 'styled-components';
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   displayWeatherPanel: displayWeatherPanel(state)
-})
+});
 
-const mapDispatchToProps = (dispatch) => ({})
+const mapDispatchToProps = dispatch => ({});
 
-@connect( mapStateToProps, mapDispatchToProps )
+@connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
 export default class HomePage extends PureComponent {
-  constructor(props){
+  constructor(props) {
     super(props);
   }
 
-  render(){
+  render() {
     return (
-      <div className={ this.props.className }>
-        <Map fullWidth={ this.props.displayWeatherPanel } />
-        <Weather fullWidth={ this.props.displayWeatherPanel } />
+      <div className={this.props.className}>
+        <Map fullWidth={false} />
+        {/* <Map fullWidth={ this.props.displayWeatherPanel } /> */}
+        {/* <Weather fullWidth={ this.props.displayWeatherPanel } /> */}
         <Controls />
         <Wiki />
       </div>
-    )
+    );
   }
 }

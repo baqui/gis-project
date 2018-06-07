@@ -10,14 +10,15 @@ import store from '../Store';
 
 const container = document.getElementById('app');
 
-render ((
-  <Provider store={ store } >
+render(
+  <Provider store={store}>
     <BrowserRouter>
       <MainLayout>
         <Switch>
-          <Route path='/' exact component={ HomePage } />
+          <Route path="/" exact component={HomePage} />
         </Switch>
       </MainLayout>
     </BrowserRouter>
-  </Provider>
-), container);
+  </Provider>,
+  container
+);

@@ -6,7 +6,6 @@ import titiliumBold_woff2 from '../assets/fonts/TitilliumWeb-Bold.woff2';
 import titiliumBold_woff from '../assets/fonts/TitilliumWeb-Bold.woff';
 import titiliumBold_ttf from '../assets/fonts/TitilliumWeb-Bold.ttf';
 
-
 export const fontsDefinition = `
   @font-face { //Titillium-Light
     font-family: 'Titillium';

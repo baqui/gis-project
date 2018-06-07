@@ -13,7 +13,7 @@ export const DefaultTheme = {
     rythm: {
       base: 1,
       golden: 1.618,
-      minorSeventh: 1.778,
+      minorSeventh: 1.778
     }
   }
-}
+};

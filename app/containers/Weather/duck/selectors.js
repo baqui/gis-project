@@ -1,13 +1,15 @@
-export const getVoivodeshipsWeather = (state) => state.voivodeships.voivodeships.get('weather').toArray();
+export const getVoivodeshipsWeather = state =>
+  state.voivodeships.voivodeships.get('weather').toArray();
 
-export const getCheckedVoivodeshipId = (state) => state.voivodeships.voivodeships.get('checked_voivodeship');
+export const getCheckedVoivodeshipId = state =>
+  state.voivodeships.voivodeships.get('checked_voivodeship');
 
-export const getWeatherForChosenVoivodeship = (state) => {
+export const getWeatherForChosenVoivodeship = state => {
   const cartodb_id = getCheckedVoivodeshipId(state);
-  if( cartodb_id ){
+  if (cartodb_id) {
     const voivodeships = getVoivodeshipsWeather(state);
-    const weather = voivodeships[ cartodb_id ];
-    return weather ? weather.forecast.toArray() : []; 
+    const weather = voivodeships[cartodb_id];
+    return weather ? weather.forecast.toArray() : [];
   }
   return [];
-}
+};

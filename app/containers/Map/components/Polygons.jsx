@@ -1,14 +1,25 @@
 import React, { PureComponent } from 'react';
-import { Polygon } from "react-google-maps";
-import { connect } from 'react-redux';
-import { WIZARD_MAP_SHAPE_SETTINGS } from '../duck/consts';
+import {
+  fitMapToChosenVoivodeship,
+  setChosenVoivodeship
+} from '../duck/actions';
+import {
+  getCheckedVoivodeshipId,
+  getCheckedVoivodeshipNeighbours,
+  getCurrentMode,
+  getVoivodeships,
+  getVoivodeshipsWeather,
+  getWeatherRange,
+  isVoivodeshipsWeatherDataFetched
+} from '../duck/selectors';
+
 import { MAP_MODES } from '../../../utils/consts';
 import { POLYGON_COLORS } from '../duck/consts';
-import { setChosenVoivodeship, fitMapToChosenVoivodeship } from '../duck/actions';
-import { getVoivodeships, getWeatherRange, isVoivodeshipsWeatherDataFetched, getCurrentMode,
-         getVoivodeshipsWeather, getCheckedVoivodeshipId, getCheckedVoivodeshipNeighbours } from '../duck/selectors';
+import { Polygon } from 'react-google-maps';
+import { WIZARD_MAP_SHAPE_SETTINGS } from '../duck/consts';
+import { connect } from 'react-redux';
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   voivodeships: getVoivodeships(state),
   voivodeships_weather: getVoivodeshipsWeather(state),
   temp: getWeatherRange(state, 'temp'),
@@ -19,63 +30,75 @@ const mapStateToProps = (state) => ({
   checked_voivodeship: getCheckedVoivodeshipId(state),
   voivodeshipNeighbours: getCheckedVoivodeshipNeighbours(state),
   mode: getCurrentMode(state)
-})
+});
 
-const mapDispatchToProps = (dispatch) => ({
-  setChosenVoivodeship: (cartodb_id) => dispatch( setChosenVoivodeship( cartodb_id ) ),
-  fitBounds: () => dispatch( fitMapToChosenVoivodeship() )
-})
+const mapDispatchToProps = dispatch => ({
+  setChosenVoivodeship: cartodb_id =>
+    dispatch(setChosenVoivodeship(cartodb_id)),
+  fitBounds: () => dispatch(fitMapToChosenVoivodeship())
+});
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
 export default class Polygons extends PureComponent {
-
   constructor(props) {
     super(props);
   }
 
-  componentWillReceiveProps( nextProps ){
-    if( nextProps.checked_voivodeship !== this.props.checked_voivodeship ){
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.checked_voivodeship !== this.props.checked_voivodeship) {
       this.props.fitBounds();
     }
   }
 
   render() {
-    return this.props.voivodeships.map( ( feature, index ) => {
+    return this.props.voivodeships.map((feature, index) => {
       return (
-        feature && <Polygon
-          key={ index }
-          paths={ feature.coordinates.toArray() }
-          onClick={ this.handlePolygonClick.bind( this, feature.cartodb_id ) }
-          options={{
-            ...WIZARD_MAP_SHAPE_SETTINGS,
-            fillColor: this.polygonFillColor(feature.cartodb_id)
-          }}
-        />
-      )
-    })
+        feature && (
+          <Polygon
+            key={index}
+            paths={feature.coordinates.toArray()}
+            onClick={this.handlePolygonClick.bind(this, feature.cartodb_id)}
+            options={{
+              ...WIZARD_MAP_SHAPE_SETTINGS,
+              fillColor: this.polygonFillColor(feature.cartodb_id)
+            }}
+          />
+        )
+      );
+    });
   }
 
-  handlePolygonClick( cartodb_id ){
-    this.props.setChosenVoivodeship( cartodb_id );
+  handlePolygonClick(cartodb_id) {
+    //this.props.setChosenVoivodeship( cartodb_id );
   }
 
-  mapTemp2Transparency( mode ){
-    if( !this.props[this.props.mode] ){ return 0; }
-    const ratio = 1 / ( this.props[this.props.mode].length + 1 );
-    return ( this.props[this.props.mode].indexOf( mode ) + 1 ) * ratio;
+  mapTemp2Transparency(mode) {
+    if (!this.props[this.props.mode]) {
+      return 0;
+    }
+    const ratio = 1 / (this.props[this.props.mode].length + 1);
+    return (this.props[this.props.mode].indexOf(mode) + 1) * ratio;
   }
 
   polygonFillColor(id) {
-    if( this.props.checked_voivodeship === id ){
+    if (this.props.checked_voivodeship === id) {
       return 'rgba(96, 33, 180, .5)';
-    } else if( this.props.voivodeshipNeighbours.indexOf(id) > -1 ) {
+    } else if (this.props.voivodeshipNeighbours.indexOf(id) > -1) {
       return 'rgba(145, 96, 210, .4)';
-    } else if( !this.props.checked_voivodeship && this.props.isWeatherDataFetched && this.props.voivodeships_weather[id] ) {
+    } else if (
+      !this.props.checked_voivodeship &&
+      this.props.isWeatherDataFetched &&
+      this.props.voivodeships_weather[id]
+    ) {
       const mode = this.props.voivodeships_weather[id][this.props.mode];
-      return `rgba(${ POLYGON_COLORS[ this.props.mode ] }, ${ this.mapTemp2Transparency(mode) })`;
+      return `rgba(${
+        POLYGON_COLORS[this.props.mode]
+      }, ${this.mapTemp2Transparency(mode)})`;
     } else {
       return 'rgba(55, 106, 199, 0)';
     }
   }
-
 }
