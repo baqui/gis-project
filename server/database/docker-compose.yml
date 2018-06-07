@@ -1,0 +1,17 @@
+# Use postgres/example user/password credentials
+version: '3.1'
+
+services:
+  postgres:
+    image: mdillon/postgis
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: gis-project
+
+    volumes:
+        - ./sql/init.sql:/docker-entrypoint-initdb.d/0init.sql
+        - ./sql/dump.sql:/docker-entrypoint-initdb.d/1dump.sql
+
+    ports:
+      - 5432:5432

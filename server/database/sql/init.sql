@@ -1,0 +1,3 @@
+CREATE USER gisProject SUPERUSER PASSWORD 'gisProject';
+CREATE DATABASE gisProject;
+GRANT ALL PRIVILEGES ON DATABASE gisProject TO gisProject;
