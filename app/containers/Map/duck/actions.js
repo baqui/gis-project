@@ -1,4 +1,5 @@
 import types from './types';
+import _ from "lodash";
 import { List } from 'immutable';
 import {
   normalizedVoivodeshipData,
@@ -10,11 +11,32 @@ import WeatherApiClient from '../../../services/WeatherApiClient';
 import WikiApiClient from '../../../services/WikiApiClient';
 
 let googleMap;
+let context;
 
 export const getGoogleMap = () => googleMap;
 
 export const storeGoogleMap = map => {
   googleMap = map;
+  context = map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+
+  map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.addListener(
+    "bounds_changed",
+    _.throttle(
+      () => {
+        const zoom = context.zoom; 
+        const bounds = map.getBounds();
+        const polygonPoints = [
+          [bounds.f.b, bounds.b.f],
+          [bounds.f.b, bounds.b.b],
+          [bounds.f.f, bounds.b.b],
+          [bounds.f.f, bounds.b.f]
+        ];
+        console.log(zoom, polygonPoints);
+      },
+      1500,
+      { trailing: false }
+    )
+  );
 };
 
 export const mapLoaded = map => dispatch => storeGoogleMap(map);

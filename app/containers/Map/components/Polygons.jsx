@@ -86,9 +86,14 @@ export default class Polygons extends PureComponent {
   polygonFillColor(id) {
     if (this.props.checked_voivodeship === id) {
       return 'rgba(96, 33, 180, .5)';
-    } else if (this.props.voivodeshipNeighbours.indexOf(id) > -1) {
+    } 
+    else if (this.props.voivodeshipNeighbours.indexOf(id) > -1) {
       return 'rgba(145, 96, 210, .4)';
-    } else if (
+    } 
+    else if (this.props.mode === MAP_MODES.temperatureGrid) {
+      return 'rgba(159, 231, 100, .2)';
+    } 
+    else if (
       !this.props.checked_voivodeship &&
       this.props.isWeatherDataFetched &&
       this.props.voivodeships_weather[id]

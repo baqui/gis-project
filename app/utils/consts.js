@@ -103,6 +103,7 @@ export const MAP_DEFAULT_ZOOM = 6;
 
 export const MAP_MODES = {
   temperature: 'temp',
+  temperatureGrid: 'temp_grid',
   visibility: 'visibility',
   pressure: 'pressure',
   wind: 'wind_speed'

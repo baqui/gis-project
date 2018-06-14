@@ -22,6 +22,12 @@ class Controls extends PureComponent {
   render(){
     return (
       <div className={ this.props.className }>
+        <StyledIcon 
+          name='grid_on'
+          title='siatka temperatur'
+          onClick={this.handleClick.bind(this, MAP_MODES.temperatureGrid)}
+          active={this.isActive(MAP_MODES.temperatureGrid)}
+        />
         <StyledIcon
           name='ac_unit'
           title='temperatura'
