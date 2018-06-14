@@ -15,7 +15,7 @@ let context;
 
 export const getGoogleMap = () => googleMap;
 
-export const storeGoogleMap = map => {
+export const storeGoogleMap = map => dispatch => {
   googleMap = map;
   context = map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
@@ -25,13 +25,12 @@ export const storeGoogleMap = map => {
       () => {
         const zoom = context.zoom; 
         const bounds = map.getBounds();
-        const polygonPoints = [
-          [bounds.f.b, bounds.b.f],
-          [bounds.f.b, bounds.b.b],
-          [bounds.f.f, bounds.b.b],
-          [bounds.f.f, bounds.b.f]
-        ];
-        console.log(zoom, polygonPoints);
+        const viewport = `${bounds.b.b},${bounds.f.b},${bounds.b.f},${bounds.f.f}`;
+        dispatch({
+          type: types.MAP_BOUNDS_CHANGED,
+          zoom,
+          viewport
+        });
       },
       1500,
       { trailing: false }
@@ -39,7 +38,7 @@ export const storeGoogleMap = map => {
   );
 };
 
-export const mapLoaded = map => dispatch => storeGoogleMap(map);
+export const mapLoaded = map => dispatch => dispatch(storeGoogleMap(map));
 
 export const setBounds = coordinates => {
   const merged_coordinates = [].concat.apply([], coordinates.toArray());
