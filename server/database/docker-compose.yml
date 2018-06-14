@@ -4,7 +4,7 @@ version: '3.1'
 services:
   postgres:
     image: mdillon/postgis
-    restart: always
+    restart: 'no'
     environment:
       POSTGRES_USER: gisProject
       POSTGRES_PASSWORD: gisProject
