@@ -47,3 +47,18 @@ export const VoivodeWiki = new Record({
   registration_plate: '',
   short_description: ''
 });
+
+export const GridTemperatures = new Record({
+  viewport: null,
+  zoom: 6,
+  grid: List([]),
+  gridModeSet: false
+});
+
+export const GridObject = new Record({
+  coordinates: List([]),
+  temp: null,
+  visibility: null,
+  pressure: null,
+  wind_speed: null
+});

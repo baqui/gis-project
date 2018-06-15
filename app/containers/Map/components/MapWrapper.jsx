@@ -9,7 +9,9 @@ import {
 import React, { PureComponent } from 'react';
 import { mapLoaded, parseVoivodeshipsData } from '../duck/actions';
 
+import { MAP_MODES } from '../../../utils/consts';
 import Polygons from './Polygons';
+import GridTemperature from './GridTemperature';
 import Temperatures from './Temperatures';
 import { connect } from 'react-redux';
 
@@ -35,6 +37,7 @@ export default class MapWrapper extends PureComponent {
   }
 
   render() {
+    const { mode } = this.props;
     return (
       <GoogleMap
         className={this.props.className || ''}
@@ -50,7 +53,8 @@ export default class MapWrapper extends PureComponent {
           streetViewControl: false
         }}
       >
-        {/* <Temperatures /> */}
+        <Temperatures />
+        <GridTemperature />
         <Polygons />
       </GoogleMap>
     );
