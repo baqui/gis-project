@@ -3,6 +3,7 @@ import cors from 'cors';
 import express from 'express';
 const { Client } = require('pg');
 import dbgeo from 'dbgeo';
+import PromiseThrottle from 'promise-throttle';
 require('dotenv').config();
 
 import WeatherApiClient from './services/weather_client';
@@ -33,13 +34,15 @@ app.use('/fetch-weather', async (req, res, next) => {
   if (!req.query.zoom) {
     res.status(400);
     res.send({ error: 'Missing param [zoom]' });
-    return;
     next();
+    return;
   }
+
   const query = `
-    SELECT ST_AsGeoJSON(location) AS geom, id
-    FROM grids 
-    WHERE zoom = $1`;
+    SELECT ST_AsGeoJSON(g.location) AS geom, g.id AS id
+    FROM grids g
+    LEFT JOIN weathers w ON w.location_id = g.id
+    WHERE g.zoom = $1 AND w.data IS NULL`;
   const values = [req.query.zoom];
   const { rows } = await client.query(query, values);
 
@@ -58,6 +61,12 @@ app.use('/fetch-weather', async (req, res, next) => {
       geometryType: 'geojson'
     },
     (error, data) => {
+      let limiter = new PromiseThrottle({
+        requestsPerSecond: 2, // up to 1 request per second
+        promiseImplementation: Promise // the Promise library you are using
+      });
+      let promiseArray = [];
+
       data.features.map(feature => {
         const coords = feature.geometry.coordinates[0];
         const location_id = feature.properties.id;
@@ -66,24 +75,38 @@ app.use('/fetch-weather', async (req, res, next) => {
         const longitude =
           (coords[0][0] + coords[1][0] + coords[2][0] + coords[3][0]) / 4;
 
-        WeatherApiClient.getWeatherByCoordinates(latitude, longitude).then(
-          response => {
-            const weather = response.data.query.results;
-            client.query(
-              'INSERT INTO weathers (location_id, data) VALUES ($1, $2)',
-              [location_id, weather],
-              (err, res) => {
-                if (err) {
-                  console.log('Failed to save record');
-                  console.log(err.stack);
-                } else {
-                  console.log('Saved record ', location_id);
-                }
+        promiseArray.push(
+          limiter.add(() =>
+            WeatherApiClient.getWeatherByCoordinates(latitude, longitude).then(
+              response => {
+                const weather = response.data.query.results;
+                client.query(
+                  'INSERT INTO weathers (location_id, data) VALUES ($1, $2)',
+                  [location_id, weather],
+                  (err, res) => {
+                    if (err) {
+                      console.log('Failed to save record');
+                      console.log(err.stack);
+                    } else {
+                      console.log('Saved record ', location_id);
+                    }
+                  }
+                );
+              },
+              error => {
+                console.log(
+                  `Failed to download weather for location_id=${location_id}, STATUS: ${
+                    error.response.status
+                  }`
+                );
+                console.log(error.response.headers);
               }
-            );
-          }
+            )
+          )
         );
       });
+
+      Promise.all(promiseArray).then(() => console.log('All DONE'));
 
       res.send();
       next();
@@ -117,7 +140,7 @@ app.use('/weather/where', async (req, res, next) => {
     SELECT ST_AsGeoJSON(g.location) AS geom, g.zoom AS zoom, w.data AS weather
     FROM grids g
     LEFT JOIN weathers w ON w.location_id = g.id
-    WHERE g.zoom = $5 AND g.location && ST_MakeEnvelope($1, $2, $3, $4, 4326)`;
+    WHERE g.zoom = $5 AND w.data IS NOT NULL AND g.location && ST_MakeEnvelope($1, $2, $3, $4, 4326)`;
 
   const values = req.query.viewport.split(',');
   values.push(req.query.zoom);

@@ -6,35 +6,6 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE EXTENSION IF NOT EXISTS postgis_topology;
 CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
 
-CREATE TABLE temperatures(
-    id bigserial,
-    temp numeric,
-    zoom integer,
-    location Geography(Polygon,4326) not null,
-    primary key (id)
-);
-
-CREATE TABLE grids(
-    id bigserial,
-    zoom integer,
-    location Geography(Polygon,4326) not null,
-    primary key (id)
-);
-
-CREATE TABLE weathers(
-    id bigserial,
-    location_id bigint REFERENCES grids (id) not null,
-    data jsonb not null,
-    primary key (id)
-);
-
-
-
-INSERT INTO temperatures (temp, zoom, location)
-VALUES ( 25.50, 9, ST_GeomFromText('POLYGON((18.578559458255768 54.3847561202123, 18.582679331302643 54.38855462060335, 18.57426792383194 54.391053442287, 18.578559458255768 54.3847561202123))', 4326) ),
-( 15.80, 9, ST_GeomFromText('POLYGON((17.670696 54.341566, 19.450482 53.981348, 17.857464 53.546242, 17.670696 54.341566))', 4326) ),
-( 30.10, 9, ST_GeomFromText('POLYGON((19.395550 53.702619, 21.351116 52.775581, 18.637493 52.274269, 19.395550 53.702619))', 4326) );
-
 CREATE OR REPLACE FUNCTION public.makegrid_2d (
   bound_polygon public.geometry,
   width_step integer,
@@ -93,3 +64,68 @@ BEGIN
 END;
 $body$
 LANGUAGE 'plpgsql';
+
+
+
+CREATE TABLE grids(
+    id bigserial,
+    zoom integer,
+    location Geography(Polygon,4326) not null,
+    primary key (id)
+);
+
+CREATE TABLE weathers(
+    id bigserial,
+    location_id bigint REFERENCES grids (id) not null UNIQUE,
+    data jsonb not null,
+    primary key (id)
+);
+
+
+-- LEVEL 6 Country
+INSERT INTO grids (location) SELECT (
+  ST_Dump(
+    makegrid_2d(
+      ST_GeomFromText(
+        'Polygon((14.040465652294529 54.12202348184371, 18.24822932416953 55.05144493105059, 24.02703791791953 54.58301858656643 , 24.27972346479453 50.329477603728535, 23.02728205854453 48.93491932736782, 18.89642268354453 49.208415884837294, 14.655700027294529 50.84563558240263, 13.886657058544529 52.86727749857611, 14.040465652294529 54.12202348184371))',
+        4326
+      ),
+      50000, -- width step in meters
+      50000  -- height step in meters
+    )
+  )
+) .geom;
+
+UPDATE grids SET zoom = 6 WHERE zoom IS NULL;
+
+-- LEVEL 8 - County
+INSERT INTO grids (location) SELECT (
+  ST_Dump(
+    makegrid_2d(
+      ST_GeomFromText(
+        'Polygon((14.040465652294529 54.12202348184371, 18.24822932416953 55.05144493105059, 24.02703791791953 54.58301858656643 , 24.27972346479453 50.329477603728535, 23.02728205854453 48.93491932736782, 18.89642268354453 49.208415884837294, 14.655700027294529 50.84563558240263, 13.886657058544529 52.86727749857611, 14.040465652294529 54.12202348184371))',
+        4326
+      ),
+      30000, -- width step in meters
+      30000  -- height step in meters
+    )
+  )
+) .geom;
+
+UPDATE grids SET zoom = 8 WHERE zoom IS NULL;
+
+-- LEVEL 10 - CITIES
+INSERT INTO grids (location) SELECT (
+  ST_Dump(
+    makegrid_2d(
+      ST_GeomFromText(
+        'Polygon((14.040465652294529 54.12202348184371, 18.24822932416953 55.05144493105059, 24.02703791791953 54.58301858656643 , 24.27972346479453 50.329477603728535, 23.02728205854453 48.93491932736782, 18.89642268354453 49.208415884837294, 14.655700027294529 50.84563558240263, 13.886657058544529 52.86727749857611, 14.040465652294529 54.12202348184371))',
+        4326
+      ),
+      10000, -- width step in meters
+      10000  -- height step in meters
+    )
+  )
+) .geom;
+
+UPDATE grids SET zoom = 10 WHERE zoom IS NULL;
