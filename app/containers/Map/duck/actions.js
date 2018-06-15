@@ -4,11 +4,13 @@ import { List } from 'immutable';
 import {
   normalizedVoivodeshipData,
   normalizedForecastData,
-  normalizedVoivodesWikiData
-} from './normalizers';
+  normalizedVoivodesWikiData,
+  normalizeGridResponse
+} from "./normalizers";
 import { getChosenVoivodeshipCoordinates } from './selectors';
 import WeatherApiClient from '../../../services/WeatherApiClient';
 import WikiApiClient from '../../../services/WikiApiClient';
+import GridTemperatureClient from "../../../services/GridTemperatureClient";
 
 let googleMap;
 let context;
@@ -135,3 +137,19 @@ export const fitMapToChosenVoivodeship = () => {
     setBounds(coordinates);
   };
 };
+
+export const getGridTemperatureData = (zoom, viewport) => dispatch => {
+  return GridTemperatureClient.getGridTemperatureByViewport(zoom, viewport).then(
+    response => {
+      const grid = normalizeGridResponse(response);
+      dispatch({
+        type: types.GRID_FOR_BOUNDS_FETCHED,
+        grid
+      })
+    }
+  ).catch(
+    e => {
+      console.log("error", e);
+    }
+  )
+}

@@ -1,5 +1,6 @@
 import { Map, List, Record } from 'immutable';
 import { combineReducers } from 'redux';
+import { GridTemperatures } from './records';
 import types from './types';
 
 const voivodeships = (
@@ -30,4 +31,15 @@ const voivodeships = (
   return state;
 };
 
-export default combineReducers({ voivodeships });
+const grid_temperature = (state = new GridTemperatures(), action ) => {
+  switch (action.type) {
+    case types.MAP_BOUNDS_CHANGED:
+      return state.set('viewport', action.viewport).set('zoom', action.zoom);
+    case types.GRID_FOR_BOUNDS_FETCHED:
+      return state.set('grid', action.grid);
+  }
+
+  return state;
+}
+
+export default combineReducers({ voivodeships, grid_temperature });

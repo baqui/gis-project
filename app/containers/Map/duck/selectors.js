@@ -49,3 +49,10 @@ const removeDuplicates = a =>
     .filter(function(item, index, array) {
       return !index || item != array[index - 1];
     });
+
+
+export const getMapViewport = state => state.voivodeships.grid_temperature.viewport;
+
+export const getMapZoom = state => state.voivodeships.grid_temperature.zoom;
+
+export const getMapGrid = state => state.voivodeships.grid_temperature.grid.toJS();

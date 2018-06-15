@@ -10,6 +10,7 @@ import React, { PureComponent } from 'react';
 import { mapLoaded, parseVoivodeshipsData } from '../duck/actions';
 
 import Polygons from './Polygons';
+import GridTemperature from './GridTemperature';
 import Temperatures from './Temperatures';
 import { connect } from 'react-redux';
 
@@ -51,6 +52,7 @@ export default class MapWrapper extends PureComponent {
         }}
       >
         {/* <Temperatures /> */}
+        <GridTemperature />
         <Polygons />
       </GoogleMap>
     );
