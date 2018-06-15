@@ -81,7 +81,7 @@ CREATE TABLE weathers(
     primary key (id)
 );
 
-
+/*
 -- LEVEL 6 Country
 INSERT INTO grids (location) SELECT (
   ST_Dump(
@@ -129,3 +129,4 @@ INSERT INTO grids (location) SELECT (
 ) .geom;
 
 UPDATE grids SET zoom = 10 WHERE zoom IS NULL;
+*/
