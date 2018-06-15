@@ -2450,6 +2450,10 @@ process-nextick-args@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.0.tgz#a37d732f4271b4ab1ad070d35508e8290788ffaa"
 
+promise-throttle@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/promise-throttle/-/promise-throttle-1.0.0.tgz#6ab608b743b20f6db2c8f8050108ac9d33bbb25c"
+
 proxy-addr@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.3.tgz#355f262505a621646b3130a728eb647e22055341"
