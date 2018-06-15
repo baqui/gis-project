@@ -14,3 +14,13 @@ export const POLYGON_COLORS = {
   pressure: '73, 146, 115',
   wind_speed: '185, 204, 102'
 };
+
+export const GRID_MAP_SHAPE_SETTINGS = {
+  fillColor: 'rgba(0,0,0,0)',
+  fillOpacity: 1,
+  strokeWeight: 2,
+  strokeColor: 'rgba(0,0,0,0)',
+  clickable: true,
+  editable: false,
+  zIndex: 1
+};

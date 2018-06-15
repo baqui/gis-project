@@ -51,7 +51,8 @@ export const VoivodeWiki = new Record({
 export const GridTemperatures = new Record({
   viewport: null,
   zoom: 6,
-  grid: List([])
+  grid: List([]),
+  gridModeSet: false
 });
 
 export const GridObject = new Record({

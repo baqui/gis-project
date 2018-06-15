@@ -1,3 +1,5 @@
+import Chroma from 'chroma-js';
+
 export const MAP_STYLES = [
   {
     elementType: 'labels.text.fill',
@@ -108,3 +110,55 @@ export const MAP_MODES = {
   pressure: 'pressure',
   wind: 'wind_speed'
 };
+
+export const getColorFromTemp = (tempInF, bottom, top) => {
+  // establish the chroma 'scale' object
+  const tempScaleColors = [
+    '#21006B',
+    '#4C006B',
+    '#6B006B',
+    '#990099',
+    '#B300B3',
+    '#CC00CC',
+    '#E600E6',
+    '#FF02FF',
+    '#D100FF',
+    '#9E01FF',
+    '#6600FF',
+    '#1800FF',
+    '#144AFF',
+    '#0E74FF',
+    '#00A4FF',
+    '#00CBFF',
+    '#00E6FF',
+    '#00FFFF',
+    '#01FFB3',
+    '#7FFF00',
+    '#CEFF00',
+    '#FEFF00',
+    '#FFE601',
+    '#FFCB00',
+    '#FFAE00',
+    '#FF9900',
+    '#FE7F00',
+    '#FF4F00',
+    '#FF0700',
+    '#FF4545',
+    '#FF6968',
+    '#FF8787',
+    '#FF9E9E',
+    '#FFB5B5',
+    '#FFCFCF',
+    '#FFE8E8',
+    '#EEEEEE'
+  ];
+  const tempScale = Chroma.scale(tempScaleColors)
+    .domain([bottom, top])
+    .mode('lab');
+  // extract color from chroma scale by giving it a temp number
+  const color = tempScale(tempInF);
+  return color.rgb();
+};
+
+export const toFarenheit = tempCelc =>
+  (tempCelc.toFixed(1) * 1.8 + 32).toFixed(1);

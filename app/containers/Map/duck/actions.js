@@ -1,16 +1,16 @@
 import types from './types';
-import _ from "lodash";
+import _ from 'lodash';
 import { List } from 'immutable';
 import {
   normalizedVoivodeshipData,
   normalizedForecastData,
   normalizedVoivodesWikiData,
   normalizeGridResponse
-} from "./normalizers";
+} from './normalizers';
 import { getChosenVoivodeshipCoordinates } from './selectors';
 import WeatherApiClient from '../../../services/WeatherApiClient';
 import WikiApiClient from '../../../services/WikiApiClient';
-import GridTemperatureClient from "../../../services/GridTemperatureClient";
+import GridTemperatureClient from '../../../services/GridTemperatureClient';
 
 let googleMap;
 let context;
@@ -22,12 +22,13 @@ export const storeGoogleMap = map => dispatch => {
   context = map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
 
   map.context.__SECRET_MAP_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.addListener(
-    "bounds_changed",
+    'bounds_changed',
     _.throttle(
       () => {
-        const zoom = context.zoom; 
+        const zoom = context.zoom;
         const bounds = map.getBounds();
-        const viewport = `${bounds.b.b},${bounds.f.b},${bounds.b.f},${bounds.f.f}`;
+        const viewport = `${bounds.b.b - 0.3},${bounds.f.b - 0.3},${bounds.b.f +
+          0.3},${bounds.f.f + 0.3}`;
         dispatch({
           type: types.MAP_BOUNDS_CHANGED,
           zoom,
@@ -54,19 +55,6 @@ export const setBounds = coordinates => {
   });
 
   merged_coordinates.length > 0 && googleMap.fitBounds(bounds);
-};
-
-const addAdditionalPointsAround = point => {
-  return [{ ...point }, { ...point }, { ...point }].map((point, index) => {
-    if (index % 2 === 0) {
-      point.lng += 0.1;
-      point.lat += 0.1;
-    } else {
-      point.lng -= 0.1;
-      point.lat -= 0.1;
-    }
-    return point;
-  });
 };
 
 export const parseVoivodeshipsData = data => {
@@ -139,17 +127,19 @@ export const fitMapToChosenVoivodeship = () => {
 };
 
 export const getGridTemperatureData = (zoom, viewport) => dispatch => {
-  return GridTemperatureClient.getGridTemperatureByViewport(zoom, viewport).then(
+  return GridTemperatureClient.getGridTemperatureByViewport(
+    zoom,
+    viewport
+  ).then(
     response => {
       const grid = normalizeGridResponse(response);
       dispatch({
         type: types.GRID_FOR_BOUNDS_FETCHED,
         grid
-      })
+      });
+    },
+    error => {
+      console.log('ERROR', error);
     }
-  ).catch(
-    e => {
-      console.log("error", e);
-    }
-  )
-}
+  );
+};

@@ -31,15 +31,17 @@ const voivodeships = (
   return state;
 };
 
-const grid_temperature = (state = new GridTemperatures(), action ) => {
+const grid_temperature = (state = new GridTemperatures(), action) => {
   switch (action.type) {
     case types.MAP_BOUNDS_CHANGED:
       return state.set('viewport', action.viewport).set('zoom', action.zoom);
     case types.GRID_FOR_BOUNDS_FETCHED:
       return state.set('grid', action.grid);
+    case 'GRID_MODE_SET':
+      return state.set('gridModeSet', action.boolean);
   }
 
   return state;
-}
+};
 
 export default combineReducers({ voivodeships, grid_temperature });

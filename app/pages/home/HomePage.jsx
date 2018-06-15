@@ -7,6 +7,7 @@ import Wiki from '../../containers/Wiki/Wiki';
 import { connect } from 'react-redux';
 import { displayWeatherPanel } from './duck/selectors';
 import styled from 'styled-components';
+import TemperatureLegend from '../../containers/Controls/TemperatureLegend';
 
 const mapStateToProps = state => ({
   displayWeatherPanel: displayWeatherPanel(state)
@@ -26,10 +27,10 @@ export default class HomePage extends PureComponent {
   render() {
     return (
       <div className={this.props.className}>
-        <Map fullWidth={false} />
-        {/* <Map fullWidth={ this.props.displayWeatherPanel } /> */}
-        {/* <Weather fullWidth={ this.props.displayWeatherPanel } /> */}
+        <Map fullWidth={this.props.displayWeatherPanel} />
+        <Weather fullWidth={this.props.displayWeatherPanel} />
         <Controls />
+        <TemperatureLegend />
         <Wiki />
       </div>
     );

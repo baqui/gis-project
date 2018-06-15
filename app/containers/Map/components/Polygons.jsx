@@ -10,7 +10,8 @@ import {
   getVoivodeships,
   getVoivodeshipsWeather,
   getWeatherRange,
-  isVoivodeshipsWeatherDataFetched
+  isVoivodeshipsWeatherDataFetched,
+  getGridModeSet
 } from '../duck/selectors';
 
 import { MAP_MODES } from '../../../utils/consts';
@@ -29,7 +30,8 @@ const mapStateToProps = state => ({
   isWeatherDataFetched: isVoivodeshipsWeatherDataFetched(state),
   checked_voivodeship: getCheckedVoivodeshipId(state),
   voivodeshipNeighbours: getCheckedVoivodeshipNeighbours(state),
-  mode: getCurrentMode(state)
+  mode: getCurrentMode(state),
+  gridModeSet: getGridModeSet(state)
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -72,7 +74,7 @@ export default class Polygons extends PureComponent {
   }
 
   handlePolygonClick(cartodb_id) {
-    //this.props.setChosenVoivodeship( cartodb_id );
+    this.props.setChosenVoivodeship(cartodb_id);
   }
 
   mapTemp2Transparency(mode) {
@@ -84,16 +86,17 @@ export default class Polygons extends PureComponent {
   }
 
   polygonFillColor(id) {
-    if (this.props.checked_voivodeship === id) {
+    const gridModeSet = this.props.gridModeSet;
+    if (this.props.checked_voivodeship === id && !gridModeSet) {
       return 'rgba(96, 33, 180, .5)';
-    } 
-    else if (this.props.voivodeshipNeighbours.indexOf(id) > -1) {
+    } else if (
+      this.props.voivodeshipNeighbours.indexOf(id) > -1 &&
+      !gridModeSet
+    ) {
       return 'rgba(145, 96, 210, .4)';
-    } 
-    else if (this.props.mode === MAP_MODES.temperatureGrid) {
+    } else if (gridModeSet) {
       return 'rgba(159, 231, 100, .2)';
-    } 
-    else if (
+    } else if (
       !this.props.checked_voivodeship &&
       this.props.isWeatherDataFetched &&
       this.props.voivodeships_weather[id]

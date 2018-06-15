@@ -8,7 +8,7 @@ import {
   VoivodeWeather,
   VoivodeWiki,
   GridObject
-} from "./records";
+} from './records';
 
 export const normalizedVoivodeshipData = data => {
   let voivodeships = [];
@@ -77,19 +77,27 @@ const toVoivodeWiki = obj => new VoivodeWiki(obj);
 export const normalizeGridResponse = obj => {
   const normalized = obj.data.features.map(grid => toGridObject(grid));
   return List(normalized);
-}
+};
 
 const toGridObject = obj => {
   const channel = obj.properties.weather.channel;
   return new GridObject({
-    coordinates: List(obj.geometry.coordinates[0].map(point => new Point({
-      lng: point[0],
-      lat: point[1]
-    }))),
-    temp: parseFloat(channel.item.condition.temp),
-    visibility: parseFloat(channel.atmosphere.visibility),
-    pressure: parseFloat(channel.atmosphere.pressure),
-    wind_speed: parseFloat(channel.wind.speed)
+    coordinates: List(
+      obj.geometry.coordinates[0].map(
+        point =>
+          new Point({
+            lng: point[0],
+            lat: point[1]
+          })
+      )
+    ),
+    temp: channel.item ? parseFloat(channel.item.condition.temp) : null,
+    visibility: channel.atmosphere
+      ? parseFloat(channel.atmosphere.visibility)
+      : null,
+    pressure: channel.atmosphere
+      ? parseFloat(channel.atmosphere.pressure)
+      : null,
+    wind_speed: channel.wind ? parseFloat(channel.wind.speed) : null
   });
-}
-  
+};
